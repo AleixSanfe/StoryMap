@@ -17,6 +17,8 @@ import CameraStyles from './styles/CameraStyles';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Mapp from './views/Mapp';
+
 const instructions = Platform.select({
 	ios: 'Press Cmd+R to reload,\n' +
 		'Cmd+D or shake for dev menu',
@@ -24,7 +26,7 @@ const instructions = Platform.select({
 		'Shake or press menu button for dev menu',
 });
 
-export default class App extends Component<{}> {
+class App extends Component<{}> {
 
 	constructor(props) {
 	    super(props);
@@ -36,6 +38,7 @@ export default class App extends Component<{}> {
 
 
 	render() {
+		const { navigate } = this.props.navigation;
 		return (
 			<View style={CameraStyles.container}>
 				<Camera
@@ -76,7 +79,7 @@ export default class App extends Component<{}> {
 						</View>
 
 						<View style={{flex:30,alignItems: 'center',justifyContent: 'center'}}>
-							<Icon name="google-maps" size={50} color="#FFF" />
+							<Icon name="google-maps" size={50} color="#FFF" onPress={() => navigate('Mapp')} />
 						</View>
 
 					</View>
@@ -100,7 +103,7 @@ export default class App extends Component<{}> {
 	}
 }
 
-const AppNavigator = StackNavigator({
-  Home: { screen: App },
-  Profile: { screen: ProfileScreen },
+export default AppNavigator = StackNavigator({
+  App: { screen: App, navigationOptions: { header: null } },
+  Mapp: { screen: Mapp, navigationOptions: { header: null } },
 });
