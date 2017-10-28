@@ -46,7 +46,7 @@ class App extends Component<{}> {
 					style={CameraStyles.preview}
 					aspect={Camera.constants.Aspect.fill}
 					flashMode={this.state.flash_state ? Camera.constants.FlashMode.on : Camera.constants.FlashMode.off}
-					type={Camera.constants.Type.front}>
+					type={Camera.constants.Type.back}>
 
 					<View style={{flex: 7.5,flexDirection: 'row',backgroundColor: 'rgba(0,0,0,0.5)'}}>
 
