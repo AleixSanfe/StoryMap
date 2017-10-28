@@ -31,8 +31,14 @@ class App extends Component<{}> {
 	constructor(props) {
 	    super(props);
 	    
+	    this.camera = null;
 	    this.state = {
-	    	'flash_state': true
+	    	camera: {
+		        aspect: Camera.constants.Aspect.fill,
+		        captureTarget: Camera.constants.CaptureTarget.cameraRoll,
+		        type: Camera.constants.Type.back,
+		        flashMode: Camera.constants.FlashMode.off
+		      }
 	    };
 	  }
 
@@ -44,15 +50,15 @@ class App extends Component<{}> {
 				<Camera
 					ref={(cam) => { this.camera = cam; }}
 					style={CameraStyles.preview}
-					aspect={Camera.constants.Aspect.fill}
-					flashMode={this.state.flash_state ? Camera.constants.FlashMode.on : Camera.constants.FlashMode.off}
-					type={Camera.constants.Type.back}>
+					aspect={this.state.camera.aspect}
+					flashMode={this.state.camera.flashMode}
+					type={this.state.camera.type}>
 
 					<View style={{flex: 7.5,flexDirection: 'row',backgroundColor: 'rgba(0,0,0,0.5)'}}>
 
 						<View style={{flex:20,alignItems: 'center',justifyContent: 'center'}}>
 							{(() => {
-						        return this.state.flash_state ? 
+						        return this.state.camera.flashMode == Camera.constants.FlashMode.on ? 
 						        	<Icon name="flash" size={30} color="#FFF" onPress={this.changeFlashState.bind(this)}/> : 
 						        	<Icon name="flash-off" size={30} color="#FFF" onPress={this.changeFlashState.bind(this)}/>;
 						     })()}
@@ -61,7 +67,7 @@ class App extends Component<{}> {
 						<View style={{flex:60,alignItems: 'center',justifyContent: 'center'}}></View>
 
 						<View style={{flex:20,alignItems: 'center',justifyContent: 'center'}}>
-							<Icon name="rotate-3d" size={30} color="#FFF" />
+							<Icon name="rotate-3d" size={30} color="#FFF" onPress={this.changeCameraType.bind(this)} />
 						</View>
 
 					</View>
@@ -90,8 +96,21 @@ class App extends Component<{}> {
 	}
 
 	changeFlashState(){
-		let fs = this.state.flash_state;
-		this.setState({flash_state: !fs});
+		let cam = this.state.camera;
+
+		if(cam.flashMode == Camera.constants.FlashMode.off) cam.flashMode = Camera.constants.FlashMode.on;
+		else cam.flashMode = Camera.constants.FlashMode.off;
+
+		this.setState({camera: cam});
+	}
+
+	changeCameraType(){
+		let cam = this.state.camera;
+
+		if(cam.type == Camera.constants.Type.back) cam.type = Camera.constants.Type.front;
+		else cam.type = Camera.constants.Type.back;
+
+		this.setState({camera: cam});
 	}
 
 	takePicture() {
