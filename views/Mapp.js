@@ -92,8 +92,12 @@ export default class Mapp extends Component {
 			ps = JSON.parse(ps);
 
 			if(ps != null){
-				let path = ps[i];
-				navigate('ImgView',{path: path});
+				let paths = [];
+				for(j=0; j < this.state.markers.length; j++){
+					if(this.state.markers[i].latitude == this.state.markers[j].latitude && this.state.markers[i].longitude == this.state.markers[j].longitude) paths.push(ps[j]);
+				}
+
+				navigate('ImgView',{paths: paths});
 			}
 		} );
 	}
