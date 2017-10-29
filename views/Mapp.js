@@ -93,7 +93,7 @@ export default class Mapp extends Component {
 
 			if(ps != null){
 				let path = ps[i];
-				navigate('Pic',{path: path});
+				navigate('ImgView',{path: path});
 			}
 		} );
 	}

@@ -19,7 +19,7 @@ import CameraStyles from './styles/CameraStyles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Mapp from './views/Mapp';
-import Picture from './views/Picture';
+import ImgView from './views/ImgView';
 
 const instructions = Platform.select({
 	ios: 'Press Cmd+R to reload,\n' +
@@ -166,5 +166,5 @@ class App extends Component<{}> {
 export default AppNavigator = StackNavigator({
   App: { screen: App, navigationOptions: { header: null } },
   Mapp: { screen: Mapp, navigationOptions: { header: null } },
-  Pic: { screen: Picture, navigationOptions: { header: null } }
+  ImgView: { screen: ImgView, navigationOptions: { header: null } }
 });
