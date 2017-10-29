@@ -11,6 +11,7 @@ import {
 	View
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import { AsyncStorage  } from 'react-native';
 
 import Camera from 'react-native-camera';
 import CameraStyles from './styles/CameraStyles';
@@ -18,6 +19,7 @@ import CameraStyles from './styles/CameraStyles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Mapp from './views/Mapp';
+import Picture from './views/Picture';
 
 const instructions = Platform.select({
 	ios: 'Press Cmd+R to reload,\n' +
@@ -113,11 +115,50 @@ class App extends Component<{}> {
 		this.setState({camera: cam});
 	}
 
+	_addPic(info,path){
+
+		AsyncStorage.getItem('markers').then( (ms) => {
+
+			ms = JSON.parse(ms);
+			if(ms == null)ms = [];
+			ms.push(info);
+
+			ms = JSON.stringify(ms);
+			AsyncStorage.setItem('markers', ms );
+
+		} );
+
+		AsyncStorage.getItem('paths').then( (ps) => {
+
+			ps = JSON.parse(ps);
+			if(ps == null)ps = [];
+			ps.push(path);
+
+			ps = JSON.stringify(ps);
+			AsyncStorage.setItem('paths', ps );
+
+		} );
+	}
+
 	takePicture() {
 		const options = {};
 		//options.location = ...
 		this.camera.capture({metadata: options})
-			.then((data) => console.log(data))
+			.then((data) => {
+
+				let path = data.path;
+				navigator.geolocation.getCurrentPosition(
+			    (position) => {
+			        let info = {
+			        	latitude: position.coords.latitude,
+			        	longitude: position.coords.longitude
+			        };
+			        this._addPic(info,path);
+			    },(e) => {
+			    	console.warn(e);
+			    });
+
+			})
 			.catch(err => console.error(err));
 	}
 }
@@ -125,4 +166,5 @@ class App extends Component<{}> {
 export default AppNavigator = StackNavigator({
   App: { screen: App, navigationOptions: { header: null } },
   Mapp: { screen: Mapp, navigationOptions: { header: null } },
+  Pic: { screen: Picture, navigationOptions: { header: null } }
 });

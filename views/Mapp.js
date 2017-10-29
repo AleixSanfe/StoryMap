@@ -9,11 +9,22 @@ import {
 	Text,
 	View
 } from 'react-native';
+import { AsyncStorage  } from 'react-native';
 
 import MapView from 'react-native-maps';
 import CameraStyles from '../styles/MappStyles';
 
 export default class Mapp extends Component {
+
+	_getMarkers(){
+
+		AsyncStorage.getItem('markers').then( (ms) => {
+			ms = JSON.parse(ms);
+
+			if(ms == null)ms = [];
+			this.setState({markers: ms});
+		} );
+	}
 
 	constructor(props) {
 	    super(props);
@@ -22,7 +33,8 @@ export default class Mapp extends Component {
 	    	coords: 'hola',
 	    	latitude: 0,
 	    	longitude: 0,
-	    	error: ''
+	    	error: '',
+	    	markers: []
 	    };
 
 	    navigator.geolocation.getCurrentPosition(
@@ -35,7 +47,9 @@ export default class Mapp extends Component {
 	    },(e) => {
 	    	console.warn(e);
 	    });
-	  }
+
+	    this._getMarkers();
+	}
 
 	onRegionChange(region) {
 		
@@ -60,8 +74,27 @@ export default class Mapp extends Component {
 				    }}
 				    onRegionChange={this.onRegionChange.bind(this)}
 				>
+				{this.state.markers.map( (marker,i) => {
+					return  <MapView.Marker
+						key={i}
+			    		coordinate={ marker }
+			    		onPress={ (e) => this.showPicture(i) }
+			    	/> 
+				})}
 				</MapView>
 			</View>
 		);
+	}
+
+	showPicture(i){
+		const { navigate } = this.props.navigation;
+		AsyncStorage.getItem('paths').then( (ps) => {
+			ps = JSON.parse(ps);
+
+			if(ps != null){
+				let path = ps[i];
+				navigate('Pic',{path: path});
+			}
+		} );
 	}
 }
